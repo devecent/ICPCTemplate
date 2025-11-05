@@ -1,0 +1,39 @@
+template<class B> struct SparseTable : public B {
+    using T = typename B::T;
+ 
+    size_t n;
+    vector<vector<T>> table;
+ 
+    SparseTable(vector<T>& data) {
+        n = data.size();
+        buildTable(data);
+    }
+ 
+    void buildTable(vector<T>& data) {
+        int lg = LG(n);
+        table = vector<vector<T>>(lg+1);
+        table[0] = vector<T>(n);
+        for (int i = 0; i < n; i++)
+            table[0][i] = data[i];
+        for (int i = 1; i <= lg; i++) {
+            table[i] = vector<T>(n-(1<<i)+1);
+            for (int j = 0; j <= n-(1<<i); j++) 
+                table[i][j] = B::merge(table[i-1][j], table[i-1][j+(1<<(i-1))]);
+        }
+    }
+ 
+    T query(int l, int r) {
+        int lg = LG(r-l+1);
+        return B::merge(table[lg][l], table[lg][r-(1<<lg)+1]);
+    }
+ 
+    int LG(int val) {
+        return 31 - __builtin_clz(val);
+    } 
+};
+
+struct MaxInt {
+    using T = ll;
+    const T base = 0;
+    T merge(T a, T b) { return max(a,b); }
+};
