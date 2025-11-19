@@ -6,7 +6,7 @@ vector<ii> getHull(vector<ii>& points) {
 	if(n < 3) {
 		return points;
 	}
-	auto area = [&](ii a, ii b, ii c) -> int {
+	auto area = [&](ii a, ii b, ii c) -> ll {
 		return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
 	};
 	for(int i = 0; i < n; i++) {
